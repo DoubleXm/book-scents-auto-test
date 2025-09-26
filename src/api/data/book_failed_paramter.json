@@ -1,0 +1,24 @@
+[
+  {
+    "test_input": {
+      "name": "create_book_failed",
+      "description": "testdescription",
+      "url": "https://www.baidu.com"
+    },
+    "test_expect": {
+      "status_code": 400,
+      "message": "缺少必要的参数"
+    }
+  },
+  {
+    "test_input": {
+      "author": "create_book_failed",
+      "description": "testdescription",
+      "url": "https://www.baidu.com"
+    },
+    "test_expect": {
+      "status_code": 400,
+      "message": "缺少必要的参数"
+    }
+  }
+]

@@ -1,0 +1,40 @@
+[
+  {
+    "test_input": {
+      "content": "testcomment"
+    },
+    "test_expect": {
+      "status_code": 400,
+      "message": "缺少必要的参数"
+    }
+  },
+  {
+    "test_input": {
+      "rating": 3
+    },
+    "test_expect": {
+      "status_code": 400,
+      "message": "缺少必要的参数"
+    }
+  },
+  {
+    "test_input": {
+      "content": "testcomment",
+      "rating": 6
+    },
+    "test_expect": {
+      "status_code": 400,
+      "message": "评分必须是1-5之间的整数"
+    }
+  },
+  {
+    "test_input": {
+      "content": "testcomment",
+      "rating": -1
+    },
+    "test_expect": {
+      "status_code": 400,
+      "message": "评分必须是1-5之间的整数"
+    }
+  }
+]
