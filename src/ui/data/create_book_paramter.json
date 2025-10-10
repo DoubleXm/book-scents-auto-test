@@ -1,0 +1,49 @@
+[
+  {
+    "test_input": {
+      "book_name": "",
+      "book_author": "",
+      "book_desc": "",
+      "book_cover": ""
+    },
+    "test_expect": {
+      "error_message": "缺少必要的参数",
+      "warning_message": "请上传书籍封面"
+    }
+  },
+  {
+    "test_input": {
+      "book_name": "测试书籍",
+      "book_author": "",
+      "book_desc": "",
+      "book_cover": ""
+    },
+    "test_expect": {
+      "error_message": "缺少必要的参数",
+      "warning_message": "请上传书籍封面"
+    }
+  },
+  {
+    "test_input": {
+      "book_name": "测试书籍",
+      "book_author": "测试作者",
+      "book_desc": "",
+      "book_cover": ""
+    },
+    "test_expect": {
+      "error_message": "缺少必要的参数",
+      "warning_message": "请上传书籍封面"
+    }
+  },
+  {
+    "test_input": {
+      "book_name": "测试书籍",
+      "book_author": "测试作者",
+      "book_desc": "测试描述",
+      "book_cover": ""
+    },
+    "test_expect": {
+      "warning_message": "请上传书籍封面"
+    }
+  }
+]
