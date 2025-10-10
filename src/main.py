@@ -6,7 +6,7 @@ import pathlib
 from utils.http_client import Request
 from utils.db_client import db_client
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # user_client = UserClient()
     # book_client = BookClient()
     # # response = user_client.user_register(json=create_user_data())
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # #     'POST',
     # #     'http://127.0.0.1:5001/api/v1/books',
     #     data=data,
-    #     files={ 'cover': open(pathlib.Path(__file__).parent.parent / 'src/assets/album-cover.jpeg', 'rb')}, 
+    #     files={ 'cover': open(pathlib.Path(__file__).parent.parent / 'src/assets/album-cover.jpeg', 'rb')},
     #     headers=headers
     # )
     # print(book_response)

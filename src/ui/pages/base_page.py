@@ -1,5 +1,6 @@
 from playwright.sync_api import Page
 
+
 class BasePage:
     def __init__(self, page: Page):
         self.page = page
@@ -7,7 +8,7 @@ class BasePage:
     def wait_for_timeout(self, timeout: int = 5000):
         """等待指定超时时间"""
         self.page.wait_for_timeout(timeout)
-    
+
     def wait_for_page_load(self, timeout: int = 5000):
         """等待页面加载完成"""
         self.page.wait_for_load_state("load", timeout=timeout)
