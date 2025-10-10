@@ -6,24 +6,24 @@ from api.client.comment_client import CommentClient
 from api.data.create_data import create_user_data, create_book_data, create_book_comment_data
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='package')
 def db_cursor():
     """数据库游标 fixture"""
     cursor = db_client()
     yield cursor
     cursor.close()
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='package')
 def user_client():
     """用户客户端 fixture"""
     return UserClient()
 
-@pytest.fixture(scope='session') 
+@pytest.fixture(scope='package') 
 def book_client():
     """图书客户端 fixture"""
     return BookClient()
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='package')
 def comment_client():
     """评论客户端 fixture"""
     return CommentClient()

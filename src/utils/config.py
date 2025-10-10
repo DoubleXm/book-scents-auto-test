@@ -18,6 +18,7 @@ class Config:
 
     UI_HEADLESS = os.getenv('UI_HEADLESS', 'true').lower() == 'true'
     UI_BROWSER = os.getenv('UI_BROWSER', 'chrome')
+    UI_URL = os.getenv('UI_URL')
 
     MYSQL_HOST = os.getenv('MYSQL_HOST', 'localhost')
     MYSQL_PORT = int(os.getenv('MYSQL_PORT', 3306))
