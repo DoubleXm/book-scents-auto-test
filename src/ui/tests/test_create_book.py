@@ -64,25 +64,30 @@ class TestCreateBook:
         formatter_parameterize_data(test_create_book_data_path),
     )
     @allure.title("测试创建书籍 -> 异常边界 {test_input}")
-    def test_create_book_04(self, create_book_page, test_input, test_expect):
-        create_book_page.navigate().create_book(
-            book_name=test_input["book_name"],
-            book_author=test_input["book_author"],
-            book_desc=test_input["book_desc"],
-            book_cover=test_input["book_cover"],
-        )
+    def test_create_book_04(self, create_book_page, test_input, test_expect, logger):
+        logger.info(f"测试创建书籍 -> 异常边界 {test_input}")
+        try:
+            create_book_page.navigate().create_book(
+                book_name=test_input["book_name"],
+                book_author=test_input["book_author"],
+                book_desc=test_input["book_desc"],
+                book_cover=test_input["book_cover"],
+            )
 
-        print(create_book_page.error_message)
-        if "error_message" in test_expect:
-            expect(create_book_page.error_message).to_be_visible()
-            expect(create_book_page.error_message).to_have_text(
-                test_expect["error_message"]
-            )
-        if "warning_message" in test_expect:
-            expect(create_book_page.warning_message).to_be_visible()
-            expect(create_book_page.warning_message).to_have_text(
-                test_expect["warning_message"]
-            )
+            logger.info(create_book_page.error_message.text_content())
+            if "error_message" in test_expect:
+                expect(create_book_page.error_message).to_be_visible()
+                expect(create_book_page.error_message).to_have_text(
+                    test_expect["error_message"]
+                )
+            if "warning_message" in test_expect:
+                expect(create_book_page.warning_message).to_be_visible()
+                expect(create_book_page.warning_message).to_have_text(
+                    test_expect["warning_message"]
+                )
+        except AssertionError:
+            logger.error("断言失败 -> %s, %s", test_input, test_expect)
+            raise AssertionError("断言失败")
 
         create_book_page.error_message.wait_for(state="hidden", timeout=5000)
         create_book_page.warning_message.wait_for(state="hidden", timeout=5000)

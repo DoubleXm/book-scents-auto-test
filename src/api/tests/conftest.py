@@ -8,6 +8,13 @@ from api.data.create_data import (
     create_book_data,
     create_book_comment_data,
 )
+from utils.logger import test_logger
+
+
+@pytest.fixture(scope="session")
+def logger():
+    """日志记录器 fixture"""
+    return test_logger
 
 
 @pytest.fixture(scope="package")
@@ -37,19 +44,22 @@ def comment_client():
 
 
 @pytest.fixture(scope="function")
-def user_register(user_client, db_cursor):
+def user_register(user_client, db_cursor, logger):
     """注册用户"""
     data = create_user_data()
     response = user_client.user_register(json=data)
+
+    logger.info(f"注册用户 {data} 响应: {response.status_code} {response.json()}")
     yield response
     # 注册后删除用户
     if response.status_code == 200:
         db_cursor.execute("DELETE FROM users WHERE name = %s", (data["username"],))
         db_cursor.connection.commit()
+        logger.info(f"删除用户 {data['username']}")
 
 
 @pytest.fixture(scope="function")
-def book_create(book_client, db_cursor, user_register):
+def book_create(book_client, db_cursor, user_register, logger):
     """创建图书"""
     data = create_book_data()
     cover = data["cover"]
@@ -59,16 +69,18 @@ def book_create(book_client, db_cursor, user_register):
     response = book_client.create_book(
         data, files={"cover": cover}, headers={"Authorization": f"Bearer {token}"}
     )
+    logger.info(f"创建图书 {data} 响应: {response.status_code} {response.json()}")
     yield {"response": response, "token": token}
     # 创建后删除图书
     if response.status_code == 200:
         book_id = response.json()["id"]
         db_cursor.execute("DELETE FROM books WHERE id = %s", (book_id,))
         db_cursor.connection.commit()
+        logger.info(f"删除图书 {book_id}")
 
 
 @pytest.fixture(scope="function")
-def book_comment_create(book_create, comment_client, db_cursor):
+def book_comment_create(book_create, comment_client, db_cursor, logger):
     """创建图书评论"""
     token = book_create["token"]
     book_id = book_create["response"].json()["id"]
@@ -77,9 +89,11 @@ def book_comment_create(book_create, comment_client, db_cursor):
     response = comment_client.create_comment(
         book_id, data, headers={"Authorization": f"Bearer {token}"}
     )
+    logger.info(f"创建评论 {data} 响应: {response.status_code} {response.json()}")
     yield {"response": response, "token": token, "book_id": book_id}
     # 创建后删除评论
     if response.status_code == 200:
         comment_id = response.json()["id"]
         db_cursor.execute("DELETE FROM comments WHERE id = %s", (comment_id,))
         db_cursor.connection.commit()
+        logger.info(f"删除评论 {comment_id}")

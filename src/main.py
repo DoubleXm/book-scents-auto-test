@@ -1,5 +1,6 @@
 import subprocess
 import argparse
+from datetime import datetime
 from utils.config import config
 
 
@@ -27,14 +28,12 @@ class TestRunner:
             "--all-test", help="执行所有测试", action="store_const", const="src"
         )
         parser.add_argument(
-            "--debug", help="开启调试模式", action="store_const", const="PWDEBUG=1"
+            "--debug", help="开启 UI 调试模式", action="store_const", const="PWDEBUG=1"
         )
         return parser
 
-    def build_command(self, args):
-        command = f"{args.debug or ''} pytest {args.api_test or ''} {args.ui_test or ''} {args.all_test or ''}"
+    def _message_record(self, args, command):
         print(f"\n🚀 执行命令: {' '.join(command.split())}\n🍎 当前环境: {config.ENV}")
-
         if args.ui_test or args.all_test:
             print(
                 f"🌐 浏览器: {config.UI_BROWSER}, 无头模式: {config.UI_HEADLESS}, UI地址: {config.UI_URL}"
@@ -45,6 +44,11 @@ class TestRunner:
                 f"💻 API地址: {config.BASE_URL}, API超时: {config.API_TIMEOUT}, 数据库: {config.MYSQL_DATABASE}"
             )
 
+    def build_command(self, args):
+        log_file_name = f"./artifacts/logs/{config.ENV}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+        command = f"{args.debug or ''} pytest {args.api_test or ''} {args.ui_test or ''} {args.all_test or ''} --log-file={log_file_name}"
+
+        self._message_record(args, command)
         return command
 
     def run(self):

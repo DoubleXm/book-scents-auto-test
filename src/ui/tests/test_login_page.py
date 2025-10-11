@@ -52,13 +52,17 @@ class TestLoginPage:
         "test_input, test_expect", formatter_parameterize_data(test_data_path)
     )
     @allure.title("测试登录异常边界 -> {test_input}")
-    def test_login_page_06(self, login_page, test_input, test_expect):
+    def test_login_page_06(self, login_page, test_input, test_expect, logger):
+        logger.info(f"测试登录异常边界 -> {test_input}")
         try:
             login_page.navigate().login(test_input["username"], test_input["password"])
 
             expect(login_page.error_message).to_be_visible()
             expect(login_page.error_message).to_have_text(test_expect["message"])
         except AssertionError as e:
+            logger.error(
+                f"测试登录异常边界 -> {test_input} 失败，错误信息：{test_expect['message']}"
+            )
             login_page.take_screenshot(
                 f"test_login_page_06_{test_input['username']}_{test_input['password']}"
             )
