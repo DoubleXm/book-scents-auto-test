@@ -4,7 +4,7 @@ from playwright.sync_api import expect
 from pathlib import Path
 import json
 
-from utils.config import Config
+from utils.config import config
 from utils.helper import formatter_parameterize_data
 
 
@@ -26,13 +26,13 @@ class TestLoginPage:
     def test_login_page_02(self, login_page):
         login_page.navigate().login("张三", "password123")
 
-        expect(login_page.page).to_have_url(f"{Config.UI_URL}/")
+        expect(login_page.page).to_have_url(f"{config.UI_URL}/")
 
     @allure.title("测试登录 -> 跳转注册页面")
     def test_login_page_03(self, login_page, register_page):
         login_page.navigate().go_register_page_btn.click()
 
-        expect(login_page.page).to_have_url(f"{Config.UI_URL}/register")
+        expect(login_page.page).to_have_url(f"{config.UI_URL}/register")
         expect(register_page.page_title).to_have_text("注册")
 
     @allure.title("测试登录 -> title 文案")
@@ -83,7 +83,7 @@ class TestLoginPage:
         else:
             user = user_local
 
-        expect(login_page.page).to_have_url(f"{Config.UI_URL}/")
+        expect(login_page.page).to_have_url(f"{config.UI_URL}/")
         # expect 只能用于判定 playwright 对象，普通的数据结构仍然要使用 assert 断言
         assert user["token"] is not None
         assert user["profile"]["mobile"] == "13800138001"

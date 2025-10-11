@@ -18,7 +18,7 @@ test_create_book_data_path = (
 class TestCreateBook:
 
     @allure.title("测试创建书籍 -> 页面显示正常")
-    def test_case_book_01(self, create_book_page):
+    def test_create_book_01(self, create_book_page):
         create_book_page.navigate()
 
         expect(create_book_page.page_title).to_have_text("上传书籍")

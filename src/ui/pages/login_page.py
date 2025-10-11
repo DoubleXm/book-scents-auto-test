@@ -1,5 +1,5 @@
 from ui.pages.base_page import BasePage
-from utils.config import Config
+from utils.config import config
 
 
 class LoginPage(BasePage):
@@ -7,7 +7,7 @@ class LoginPage(BasePage):
 
     def navigate(self):
         """导航到登录页面"""
-        self.page.goto(f"{Config.UI_URL}/login")
+        self.page.goto(f"{config.UI_URL}/login")
         self.wait_for_page_load()
         return self
 

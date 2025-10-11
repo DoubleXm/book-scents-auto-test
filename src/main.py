@@ -1,40 +1,58 @@
-from api.client.user_client import UserClient
-from api.data.create_data import create_user_data, create_book_data
-from api.client.book_client import BookClient
-import requests
-import pathlib
-from utils.http_client import Request
-from utils.db_client import db_client
+import subprocess
+import argparse
+from utils.config import config
+
+
+class TestRunner:
+
+    def __init__(self):
+        self.parser = self._setup_parser()
+
+    def _setup_parser(self):
+        parser = argparse.ArgumentParser(description="书香自动化测试")
+
+        parser.add_argument(
+            "--env", choices=["dev", "production"], default="dev", help="指定测试环境"
+        )
+        parser.add_argument(
+            "--api-test",
+            help="执行 API 测试",
+            action="store_const",
+            const="src/api/tests",
+        )
+        parser.add_argument(
+            "--ui-test", help="执行 UI 测试", action="store_const", const="src/ui/tests"
+        )
+        parser.add_argument(
+            "--all-test", help="执行所有测试", action="store_const", const="src"
+        )
+        parser.add_argument(
+            "--debug", help="开启调试模式", action="store_const", const="PWDEBUG=1"
+        )
+        return parser
+
+    def build_command(self, args):
+        command = f"{args.debug or ''} pytest {args.api_test or ''} {args.ui_test or ''} {args.all_test or ''}"
+        print(f"\n🚀 执行命令: {' '.join(command.split())}\n🍎 当前环境: {config.ENV}")
+
+        if args.ui_test or args.all_test:
+            print(
+                f"🌐 浏览器: {config.UI_BROWSER}, 无头模式: {config.UI_HEADLESS}, UI地址: {config.UI_URL}"
+            )
+
+        if args.api_test or args.all_test:
+            print(
+                f"💻 API地址: {config.BASE_URL}, API超时: {config.API_TIMEOUT}, 数据库: {config.MYSQL_DATABASE}"
+            )
+
+        return command
+
+    def run(self):
+        args = self.parser.parse_args()
+        command = self.build_command(args)
+        subprocess.run(command, shell=True, check=True)
+
 
 if __name__ == "__main__":
-    # user_client = UserClient()
-    # book_client = BookClient()
-    # # response = user_client.user_register(json=create_user_data())
-    # headers = {
-    #     'Authorization': f'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTg4NzU3MzIsImlhdCI6MTc1ODc4OTMzMiwic3ViIjoiMjZhZTAxOGYtMDgzNy00MmNkLWJiNjgtOTI5ZGY0OTc4ZjhiIn0.SsATUqGwqOU6KRV6HJ_sLX7YzKytssk67JM9QWAbgk4',
-    # }
-    # # book_response = book_client.create_book(data=create_book_data(), json={}, headers=headers)
-    # name, author, cover, description, url = create_book_data()
-    # data = {
-    #     'name': name,
-    #     'author': author,
-    #     'description': description,
-    #     'url': url
-    # }
-    # # print(pathlib.Path(__file__).parent.parent / 'src/assets/album-cover.jpeg')
-    # # book_response = book_client.create_book(
-    # book_response = Request().post('/api/v1/books',
-    # # book_response = requests.post(
-    # # book_response = requests.request(
-    # #     'POST',
-    # #     'http://127.0.0.1:5001/api/v1/books',
-    #     data=data,
-    #     files={ 'cover': open(pathlib.Path(__file__).parent.parent / 'src/assets/album-cover.jpeg', 'rb')},
-    #     headers=headers
-    # )
-    # print(book_response)
-
-    cursor = db_client()
-
-    cursor.execute('SELECT * FROM users WHERE name="testuser"')
-    print(cursor.fetchall())
+    test_runner = TestRunner()
+    test_runner.run()

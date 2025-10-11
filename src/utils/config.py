@@ -1,31 +1,44 @@
 import os
+import sys
 from dotenv import load_dotenv
 from dataclasses import dataclass
-
-load_dotenv()
 
 
 @dataclass
 class Config:
-    ENV: str = os.getenv("ENV")
+    def __init__(self):
+        self.setup_config()
 
-    BASE_URL: str = os.getenv("API_GATEWAY")
-    API_TIMEOUT: int = int(os.getenv("API_TIMEOUT", 3))
+        self.ENV = os.getenv("ENV")
+        self.BASE_URL = os.getenv("API_GATEWAY")
+        self.API_TIMEOUT = int(os.getenv("API_TIMEOUT", 3))
 
-    LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG")
-    LOG_DIR = os.getenv("LOG_DIR", "artifacts/logs")
-    CONSOLE_OUTPUT = os.getenv("CONSOLE_OUTPUT", "true").lower() == "true"
-    FILE_OUTPUT = os.getenv("FILE_OUTPUT", "true").lower() == "true"
+        self.LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG")
+        self.LOG_DIR = os.getenv("LOG_DIR", "artifacts/logs")
+        self.CONSOLE_OUTPUT = os.getenv("CONSOLE_OUTPUT", "true").lower() == "true"
+        self.FILE_OUTPUT = os.getenv("FILE_OUTPUT", "true").lower() == "true"
 
-    UI_HEADLESS = os.getenv("UI_HEADLESS", "true").lower() == "true"
-    UI_BROWSER = os.getenv("UI_BROWSER", "chrome")
-    UI_URL = os.getenv("UI_URL")
+        self.UI_HEADLESS = os.getenv("UI_HEADLESS").lower() == "true"
+        self.UI_BROWSER = os.getenv("UI_BROWSER", "chrome")
+        self.UI_URL = os.getenv("UI_URL")
 
-    MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
-    MYSQL_PORT = int(os.getenv("MYSQL_PORT", 3306))
-    MYSQL_USER = os.getenv("MYSQL_USER", "root")
-    MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "root")
-    MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "book_scents")
+        self.MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
+        self.MYSQL_PORT = int(os.getenv("MYSQL_PORT", 3306))
+        self.MYSQL_USER = os.getenv("MYSQL_USER", "root")
+        self.MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "root")
+        self.MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "book_scents")
+
+    def setup_config(self):
+        file_name = None
+        for i in sys.argv:
+            if i.startswith("--env="):
+                file_name = i.replace("--env=", "")
+                break
+
+        load_dotenv(
+            # override=True,
+            dotenv_path=(f".env.{file_name}" if file_name else ".env"),
+        )
 
     @property
     def is_dev(self) -> bool:
@@ -37,7 +50,7 @@ class Config:
 
     @property
     def is_prod(self):
-        return self.ENV == "prod"
+        return self.ENV == "production"
 
 
 config = Config()

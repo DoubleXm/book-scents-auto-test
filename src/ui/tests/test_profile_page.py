@@ -1,6 +1,6 @@
 import allure
 from playwright.sync_api import expect
-from utils.config import Config
+from utils.config import config
 
 
 @allure.parent_suite("书香 UI 测试")
@@ -28,4 +28,4 @@ class TestProfilePage:
     def test_profile_page_02(self, profile_page):
         profile_page.navigate().logout_btn.click()
 
-        expect(profile_page.page).to_have_url(f"{Config.UI_URL}/login")
+        expect(profile_page.page).to_have_url(f"{config.UI_URL}/login")

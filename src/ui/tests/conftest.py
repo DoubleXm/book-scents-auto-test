@@ -1,5 +1,6 @@
 import pytest
 from utils.db_client import db_client
+from utils.config import config
 
 # Page 为了类型提示
 from playwright.sync_api import sync_playwright, Page
@@ -21,7 +22,15 @@ def db_cursor():
 def browser():
     """浏览器 fixture"""
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        if config.UI_BROWSER == "chrome":
+            browser = p.chromium.launch(headless=config.UI_HEADLESS)
+        elif config.UI_BROWSER == "firefox":
+            browser = p.firefox.launch(headless=config.UI_HEADLESS)
+        elif config.UI_BROWSER == "webkit":
+            browser = p.webkit.launch(headless=config.UI_HEADLESS)
+        else:
+            raise ValueError(f"不支持的浏览器类型: {config.UI_BROWSER}")
+
         yield browser
         browser.close()
 

@@ -1,11 +1,11 @@
 from ui.pages.base_page import BasePage
-from utils.config import Config
+from utils.config import config
 
 
 class CreateBookPage(BasePage):
 
     def navigate(self):
-        self.page.goto(f"{Config.UI_URL}/book/upload")
+        self.page.goto(f"{config.UI_URL}/book/upload")
         self.wait_for_page_load()
         return self
 

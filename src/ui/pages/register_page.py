@@ -1,6 +1,6 @@
 from playwright.sync_api import Page
 from ui.pages.base_page import BasePage
-from utils.config import Config
+from utils.config import config
 
 
 class RegisterPage(BasePage):
@@ -8,7 +8,7 @@ class RegisterPage(BasePage):
 
     def navigate(self):
         """导航到注册页面"""
-        self.page.goto(f"{Config.UI_URL}/register")
+        self.page.goto(f"{config.UI_URL}/register")
         self.wait_for_page_load()
         return self
 

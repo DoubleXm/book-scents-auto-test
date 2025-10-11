@@ -1,12 +1,12 @@
 from ui.pages.base_page import BasePage
-from utils.config import Config
+from utils.config import config
 
 
 class ProfilePage(BasePage):
 
     def navigate(self):
         """导航到用户中心页面"""
-        self.page.goto(f"{Config.UI_URL}/profile")
+        self.page.goto(f"{config.UI_URL}/profile")
         self.wait_for_page_load()
         return self
 

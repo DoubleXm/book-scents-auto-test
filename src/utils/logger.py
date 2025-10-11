@@ -26,13 +26,13 @@ class Logger:
         self.log_dir.mkdir(parents=True, exist_ok=True)
 
         self.logger = logging.getLogger(self.name)
-        self.logger.setLevel(self.logger)
+        self.logger.setLevel(self.log_level)
 
         formatter = self._create_log_formatter()
         if self.console_output:
-            self.logger.addHandler(formatter)
+            self.logger.addHandler(self._create_console_handler())
         if self.file_output:
-            self.logger.addHandler(formatter)
+            self.logger.addHandler(self._create_file_handler())
 
     def _create_log_formatter(self):
         log_format = (
